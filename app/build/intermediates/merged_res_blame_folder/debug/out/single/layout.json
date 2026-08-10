@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/fragment_recents.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/fragment_recents.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/item_sms.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/item_sms.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/fragment_keypad.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/fragment_keypad.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/fragment_messages.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/fragment_messages.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/item_call_log.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/item_call_log.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/fragment_contacts.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/fragment_contacts.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/activity_main.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.simbridgehost.app-mergeDebugResources-3:/layout/item_contact.xml",
+        "source": "com.example.simbridgehost.app-main-6:/layout/item_contact.xml"
+    }
+]

@@ -1,0 +1,253 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.simbridgehost"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.CALL_PHONE" />
+11-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:3:5-69
+11-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:3:22-66
+12    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+12-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:4:5-75
+12-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:4:22-72
+13    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+13-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:5:5-77
+13-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:5:22-74
+14    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+14-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:6:5-71
+14-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:6:22-68
+15    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+15-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:7:5-80
+15-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:7:22-77
+16    <uses-permission android:name="android.permission.INTERNET" />
+16-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:8:5-67
+16-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:8:22-64
+17    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+17-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:9:5-76
+17-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:9:22-73
+18    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+18-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:10:5-79
+18-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:10:22-76
+19    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+19-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:11:5-77
+19-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:11:22-74
+20    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+20-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:12:5-88
+20-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:12:22-85
+21    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+21-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:13:5-77
+21-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:13:22-74
+22    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+22-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:14:5-72
+22-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:14:22-69
+23    <uses-permission android:name="android.permission.READ_CONTACTS" />
+23-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:15:5-72
+23-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:15:22-69
+24    <uses-permission android:name="android.permission.READ_SMS" />
+24-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:16:5-67
+24-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:16:22-64
+25    <uses-permission android:name="android.permission.SEND_SMS" />
+25-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:17:5-67
+25-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:17:22-64
+26    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+26-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:18:5-75
+26-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:18:22-72
+27
+28    <permission
+28-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+29        android:name="com.example.simbridgehost.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+29-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+30        android:protectionLevel="signature" />
+30-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+31
+32    <uses-permission android:name="com.example.simbridgehost.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+32-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+32-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+33
+34    <application
+34-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:19:5-67:19
+35        android:allowBackup="true"
+35-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:20:9-35
+36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+36-->[androidx.core:core:1.12.0] C:\Users\Rana\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+37        android:debuggable="true"
+38        android:extractNativeLibs="false"
+39        android:icon="@drawable/ic_launcher"
+39-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:21:9-45
+40        android:label="@string/app_name"
+40-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:22:9-41
+41        android:roundIcon="@drawable/ic_launcher"
+41-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:23:9-50
+42        android:supportsRtl="true"
+42-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:24:9-35
+43        android:theme="@style/Theme.SimBridgeHost"
+43-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:25:9-51
+44        android:usesCleartextTraffic="true" >
+44-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:26:9-44
+45        <activity
+45-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:27:9-51:20
+46            android:name="com.example.simbridgehost.MainActivity"
+46-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:28:13-41
+47            android:exported="true"
+47-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:29:13-36
+48            android:launchMode="singleTop" >
+48-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:30:13-43
+49            <intent-filter>
+49-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:31:13-34:29
+50                <action android:name="android.intent.action.MAIN" />
+50-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:32:17-69
+50-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:32:25-66
+51
+52                <category android:name="android.intent.category.LAUNCHER" />
+52-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:33:17-77
+52-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:33:27-74
+53            </intent-filter>
+54            <intent-filter>
+54-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:35:13-38:29
+55                <action android:name="android.intent.action.DIAL" />
+55-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:17-69
+55-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:25-66
+56
+57                <category android:name="android.intent.category.DEFAULT" />
+57-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:17-76
+57-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:27-73
+58            </intent-filter>
+59            <intent-filter>
+59-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:39:13-43:29
+60                <action android:name="android.intent.action.DIAL" />
+60-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:17-69
+60-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:25-66
+61
+62                <category android:name="android.intent.category.DEFAULT" />
+62-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:17-76
+62-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:27-73
+63
+64                <data android:scheme="tel" />
+64-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:42:17-46
+64-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:42:23-43
+65            </intent-filter>
+66            <intent-filter>
+66-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:44:13-50:29
+67                <action android:name="android.intent.action.VIEW" />
+67-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:45:17-69
+67-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:45:25-66
+68                <action android:name="android.intent.action.DIAL" />
+68-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:17-69
+68-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:36:25-66
+69
+70                <category android:name="android.intent.category.DEFAULT" />
+70-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:17-76
+70-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:37:27-73
+71                <category android:name="android.intent.category.BROWSABLE" />
+71-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:48:17-78
+71-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:48:27-75
+72
+73                <data android:scheme="tel" />
+73-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:42:17-46
+73-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:42:23-43
+74            </intent-filter>
+75        </activity>
+76
+77        <service
+77-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:52:9-55:57
+78            android:name="com.example.simbridgehost.BridgeServerService"
+78-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:53:13-48
+79            android:exported="false"
+79-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:54:13-37
+80            android:foregroundServiceType="phoneCall" />
+80-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:55:13-54
+81        <service
+81-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:56:9-66:19
+82            android:name="com.example.simbridgehost.SimBridgeInCallService"
+82-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:57:13-51
+83            android:exported="true"
+83-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:58:13-36
+84            android:permission="android.permission.BIND_INCALL_SERVICE" >
+84-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:59:13-72
+85            <intent-filter>
+85-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:60:13-62:29
+86                <action android:name="android.telecom.InCallService" />
+86-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:61:17-72
+86-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:61:25-69
+87            </intent-filter>
+88
+89            <meta-data
+89-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:63:13-65:40
+90                android:name="android.telecom.IN_CALL_SERVICE_UI"
+90-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:64:17-66
+91                android:value="true" />
+91-->C:\SimBridgeHost\app\src\main\AndroidManifest.xml:65:17-37
+92        </service>
+93
+94        <provider
+94-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+95            android:name="androidx.startup.InitializationProvider"
+95-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+96            android:authorities="com.example.simbridgehost.androidx-startup"
+96-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+97            android:exported="false" >
+97-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+98            <meta-data
+98-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+99                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+99-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+100                android:value="androidx.startup" />
+100-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Rana\.gradle\caches\transforms-3\9dba3473c2e7ab91e493b9371a42d8d3\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+101            <meta-data
+101-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Rana\.gradle\caches\transforms-3\4c2924f70e8c04987f83fcfd1bb151d3\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+102                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+102-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Rana\.gradle\caches\transforms-3\4c2924f70e8c04987f83fcfd1bb151d3\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+103                android:value="androidx.startup" />
+103-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Rana\.gradle\caches\transforms-3\4c2924f70e8c04987f83fcfd1bb151d3\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+104            <meta-data
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+105                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+105-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+106                android:value="androidx.startup" />
+106-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+107        </provider>
+108
+109        <receiver
+109-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+110            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+111            android:directBootAware="false"
+111-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+112            android:enabled="true"
+112-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+113            android:exported="true"
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+114            android:permission="android.permission.DUMP" >
+114-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+115            <intent-filter>
+115-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+116                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+117            </intent-filter>
+118            <intent-filter>
+118-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+119                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+120            </intent-filter>
+121            <intent-filter>
+121-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+122                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+123            </intent-filter>
+124            <intent-filter>
+124-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+125                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+125-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+125-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Rana\.gradle\caches\transforms-3\ee77c6148e535550acd02ec4a55fcb7f\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+126            </intent-filter>
+127        </receiver>
+128    </application>
+129
+130</manifest>
