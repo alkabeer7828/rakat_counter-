@@ -21,12 +21,19 @@ jobs:
         working-directory: sajdah_counter
         run: flutter pub get
 
-      - name: Build iOS IPA
+      - name: Build iOS App
         working-directory: sajdah_counter
-        run: flutter build ipa --no-codesign
+        run: flutter build ios --release --no-codesign
+
+      - name: Package IPA for Sideloadly
+        working-directory: sajdah_counter
+        run: |
+          mkdir -p Payload
+          mv build/ios/iphoneos/Runner.app Payload/
+          zip -r RakatCounter.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-ipa
-          path: sajdah_counter/build/ios/ipa/*.ipa
+          path: sajdah_counter/RakatCounter.ipa
