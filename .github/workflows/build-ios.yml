@@ -18,13 +18,15 @@ jobs:
           cache: true
 
       - name: Install Dependencies
+        working-directory: sajdah_counter
         run: flutter pub get
 
       - name: Build iOS IPA
+        working-directory: sajdah_counter
         run: flutter build ipa --no-codesign
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-ipa
-          path: build/ios/ipa/*.ipa
+          path: sajdah_counter/build/ios/ipa/*.ipa
