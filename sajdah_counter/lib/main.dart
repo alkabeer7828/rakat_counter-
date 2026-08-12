@@ -627,16 +627,16 @@ class _CounterScreenState extends State<CounterScreen> {
       _totalSajdas++;
       _currentSajdah = (_totalSajdas % 2 == 0) ? 2 : 1;
       
-      if (_currentSajdah == 2) {
-        _currentRakat = ((_totalSajdas ~/ 2) + 1).clamp(1, _targetRakats);
-      } else {
-        _currentRakat = (((_totalSajdas - 1) ~/ 2) + 1).clamp(1, _targetRakats);
+      // Calculate current Rakat accurately based on completed Sajdahs
+      _currentRakat = ((_totalSajdas - 1) ~/ 2) + 1;
+      if (_currentRakat > _targetRakats) {
+        _currentRakat = _targetRakats;
       }
 
       _statusText = _getLabel('counted', param: '$_currentSajdah');
     });
 
-    // Automatically complete and stop session when target rakats are finished
+    // Auto-complete session when target rakats (all sajdahs) are reached
     if (_totalSajdas >= maxSajdasForSession) {
       setState(() {
         _statusText = _getLabel('complete');
@@ -650,6 +650,7 @@ class _CounterScreenState extends State<CounterScreen> {
       _standingStartTime = null;
     }
 
+    // Trigger 20-second Tashahhud delay IMMEDIATELY after 2nd Sajdah of 2nd Rakat (Sajdah 4)
     bool isEndOfRakat2 = (_totalSajdas == 4) && (_targetRakats > 2);
 
     if (isEndOfRakat2) {
@@ -664,6 +665,8 @@ class _CounterScreenState extends State<CounterScreen> {
           if (_currentSajdah == 2) {
             setState(() {
               _currentSajdah = 0;
+              // Advance displayed rakat count when rising for the next rakat
+              _currentRakat = (_totalSajdas ~/ 2) + 1;
               _statusText = _getLabel('stand_up', param: '$_currentRakat');
             });
           } else {
@@ -700,6 +703,8 @@ class _CounterScreenState extends State<CounterScreen> {
           _isMotionActive = false;
           _sajdahStartTime = null;
           _currentSajdah = 0;
+          // After 20s Tashahhud sits, advance displayed rakat to 3
+          _currentRakat = 3;
           _statusText = _getLabel('stand_up', param: '$_currentRakat');
         }
       });
