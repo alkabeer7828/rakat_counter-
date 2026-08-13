@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_compass/flutter_compass.dart';
+import 'package:adhan/adhan.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 late List<CameraDescription> _cameras;
+final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final Map<String, Map<String, String>> _translations = {
   'English': {
@@ -29,25 +35,25 @@ final Map<String, Map<String, String>> _translations = {
     'tashahhud': 'TASHAHHUD - RAKAT 3 IN {num}s',
     'chip_label': '{num} RAKAT',
   },
-  'Hindi (हिंदी)': {
-    'app_name': 'रक़ात काउंटर',
-    'title': 'भाषा चुनें',
-    'rakat': 'रक़ात',
-    'sajdah': 'सजदा',
-    'start': 'नमाज़ शुरू करें',
-    'stop': 'रोकें',
-    'tap_start': 'रक़ात चुनें और शुरू करें',
-    'calibrating': 'सेटिंग हो रही है...',
-    'ready_dim': 'तैयार (कम रोशनी मोड)',
-    'ready_stand': 'तैयार - जायनमाज़ के किनारे खड़े हों',
-    'counted': 'सजदा {num} दर्ज हुआ',
-    'complete': 'नमाज़ पूरी हुई',
-    'stand_up': 'रक़ात {num} के लिए खड़े हों',
-    'detecting_2': 'दूसरा सजदा चेक हो रहा है...',
-    'ready_rakat': 'रक़ात {num} - तैयार',
-    'select_rakat': 'कुल रक़ात चुनें',
-    'tashahhud': 'तशह्हुद - रक़ात 3 ({num} से.)',
-    'chip_label': '{num} रक़ात',
+  'Urdu (اردو)': {
+    'app_name': 'رکعت کاؤنٹر',
+    'title': 'زبان منتخب کریں',
+    'rakat': 'رکعت',
+    'sajdah': 'سجدہ',
+    'start': 'نماز شروع کریں',
+    'stop': 'روکیں',
+    'tap_start': 'رکعتیں منتخب کریں اور شروع کریں',
+    'calibrating': 'سیٹنگ ہو رہی ہے...',
+    'ready_dim': 'تیار (مدم روشنی)',
+    'ready_stand': 'تیار - مصلے کے کنارے کھڑے ہوں',
+    'counted': 'سجدہ {num} ریکارڈ ہو گیا',
+    'complete': 'نماز مکمل ہو گئی',
+    'stand_up': 'رکعت {num} کے لیے کھڑے ہوں',
+    'detecting_2': 'دوسرا سجدہ چیک ہو رہا ہے...',
+    'ready_rakat': 'رکعت {num} - تیار',
+    'select_rakat': 'کل رکعتیں منتخب کریں',
+    'tashahhud': 'تشہد - رکعت 3 ({num} سیکنڈ)',
+    'chip_label': '{num} رکعت',
   },
   'Arabic (العربية)': {
     'app_name': 'عداد الركعات',
@@ -69,25 +75,25 @@ final Map<String, Map<String, String>> _translations = {
     'tashahhud': 'التشهّد - الركعة الثالثة بعد {num} ثانية',
     'chip_label': '{num} ركعات',
   },
-  'Urdu (اردو)': {
-    'app_name': 'رکعت کاؤنٹر',
-    'title': 'زبان منتخب کریں',
-    'rakat': 'رکعت',
-    'sajdah': 'سجدہ',
-    'start': 'نماز شروع کریں',
-    'stop': 'روکیں',
-    'tap_start': 'رکعتیں منتخب کریں اور شروع کریں',
-    'calibrating': 'سیٹنگ ہو رہی ہے...',
-    'ready_dim': 'تیار (مدم روشنی)',
-    'ready_stand': 'تیار - مصلے کے کنارے کھڑے ہوں',
-    'counted': 'سجدہ {num} ریکارڈ ہو گیا',
-    'complete': 'نماز مکمل ہو گئی',
-    'stand_up': 'رکعت {num} کے لیے کھڑے ہوں',
-    'detecting_2': 'دوسرا سجدہ چیک ہو رہا ہے...',
-    'ready_rakat': 'رکعت {num} - تیار',
-    'select_rakat': 'کل رکعتیں منتخب کریں',
-    'tashahhud': 'تشہد - رکعت 3 ({num} سیکنڈ)',
-    'chip_label': '{num} رکعت',
+  'Hindi (हिंदी)': {
+    'app_name': 'रक़ात काउंटर',
+    'title': 'भाषा चुनें',
+    'rakat': 'रक़ात',
+    'sajdah': 'सजदा',
+    'start': 'नमाज़ शुरू करें',
+    'stop': 'रोकें',
+    'tap_start': 'रक़ात चुनें और शुरू करें',
+    'calibrating': 'सेटिंग हो रही है...',
+    'ready_dim': 'तैयार (कम रोशनी मोड)',
+    'ready_stand': 'तैयार - जायनमाज़ के किनारे खड़े हों',
+    'counted': 'सजदा {num} दर्ज हुआ',
+    'complete': 'नमाज़ पूरी हुई',
+    'stand_up': 'रक़ात {num} के लिए खड़े हों',
+    'detecting_2': 'दूसरा सजदा चेक हो रहा है...',
+    'ready_rakat': 'रक़ात {num} - तैयार',
+    'select_rakat': 'कुल रक़ात चुनें',
+    'tashahhud': 'तशह्हुद - रक़ात 3 ({num} से.)',
+    'chip_label': '{num} रक़ात',
   },
   'Bengali (বাংলা)': {
     'app_name': 'রাকাত কাউন্টার',
@@ -260,138 +266,76 @@ Future<void> main() async {
     _cameras = [];
   }
 
-  final prefs = await SharedPreferences.getInstance();
-  final savedLanguage = prefs.getString('app_language');
+  const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const iosInit = DarwinInitializationSettings();
+  await _notificationsPlugin.initialize(const InitializationSettings(android: androidInit, iOS: iosInit));
 
-  runApp(SajdahCounterApp(initialLanguage: savedLanguage));
+  final prefs = await SharedPreferences.getInstance();
+  final savedLanguage = prefs.getString('app_language') ?? 'English';
+  final savedTheme = prefs.getString('app_theme') ?? 'dark';
+
+  runApp(SajdahCounterApp(
+    initialLanguage: savedLanguage,
+    initialTheme: savedTheme,
+  ));
 }
 
-class SajdahCounterApp extends StatelessWidget {
-  final String? initialLanguage;
-  const SajdahCounterApp({super.key, this.initialLanguage});
+class SajdahCounterApp extends StatefulWidget {
+  final String initialLanguage;
+  final String initialTheme;
+  const SajdahCounterApp({super.key, required this.initialLanguage, required this.initialTheme});
+
+  static _SajdahCounterAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_SajdahCounterAppState>()!;
+
+  @override
+  State<SajdahCounterApp> createState() => _SajdahCounterAppState();
+}
+
+class _SajdahCounterAppState extends State<SajdahCounterApp> {
+  late String _language;
+  late String _themeMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _language = widget.initialLanguage;
+    _themeMode = widget.initialTheme;
+  }
+
+  void setTheme(String mode) async {
+    setState(() => _themeMode = mode);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_theme', mode);
+  }
+
+  void setLanguage(String lang) async {
+    setState(() => _language = lang);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('app_language', lang);
+  }
+
+  ThemeMode get currentThemeMode {
+    if (_themeMode == 'light') return ThemeMode.light;
+    if (_themeMode == 'system') return ThemeMode.system;
+    return ThemeMode.dark;
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rakat Counter',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
+      themeMode: currentThemeMode,
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: const Color(0xFFF2F2F7),
+        colorScheme: const ColorScheme.light(primary: Colors.black),
+      ),
+      darkTheme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.black,
+        colorScheme: const ColorScheme.dark(primary: Colors.white),
       ),
-      home: initialLanguage != null
-          ? CounterScreen(selectedLanguage: initialLanguage!)
-          : const LanguageSelectionScreen(),
-    );
-  }
-}
-
-class LanguageSelectionScreen extends StatefulWidget {
-  const LanguageSelectionScreen({super.key});
-
-  @override
-  State<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
-}
-
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
-  String _selectedLanguage = 'English';
-
-  Future<void> _saveLanguageAndContinue() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('app_language', _selectedLanguage);
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CounterScreen(selectedLanguage: _selectedLanguage),
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Rakat Counter / زبان منتخب کریں',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'اختر لغة التطبيق للبدء',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF8E8E93),
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _translations.keys.length,
-                  itemBuilder: (context, index) {
-                    final lang = _translations.keys.elementAt(index);
-                    final isSelected = lang == _selectedLanguage;
-
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.white.withOpacity(0.15) : Colors.grey[900],
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected ? Colors.white : Colors.transparent,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          lang,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.grey[400],
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                        trailing: isSelected
-                            ? const Icon(Icons.check_circle, color: Colors.white)
-                            : null,
-                        onTap: () {
-                          setState(() {
-                            _selectedLanguage = lang;
-                          });
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _saveLanguageAndContinue,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                ),
-                child: const Text('CONTINUE', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
-            ],
-          ),
-        ),
-      ),
+      home: CounterScreen(selectedLanguage: _language),
     );
   }
 }
@@ -457,6 +401,8 @@ class _CounterScreenState extends State<CounterScreen> {
   }
 
   Future<void> _startSession() async {
+    await _stopSession();
+
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       status = await Permission.camera.request();
@@ -482,7 +428,7 @@ class _CounterScreenState extends State<CounterScreen> {
       orElse: () => _cameras.first,
     );
 
-    _cameraController = CameraController(
+    final controller = CameraController(
       frontCamera,
       ResolutionPreset.low,
       enableAudio: false,
@@ -490,11 +436,14 @@ class _CounterScreenState extends State<CounterScreen> {
     );
 
     try {
-      await _cameraController!.initialize();
+      await controller.initialize();
+      _cameraController = controller;
     } on CameraException catch (e) {
       _showErrorSnackbar("Camera error: ${e.description}");
       return;
     }
+
+    if (!mounted) return;
 
     setState(() {
       _isSessionActive = true;
@@ -506,6 +455,9 @@ class _CounterScreenState extends State<CounterScreen> {
       _luminanceBuffer.clear();
       _awaitingStandingPosition = false;
       _standingStartTime = null;
+      _inCooldown = false;
+      _isMotionActive = false;
+      _isProcessingFrame = false;
       _isLowLightMode = false;
       _statusText = _getLabel('calibrating');
     });
@@ -567,7 +519,6 @@ class _CounterScreenState extends State<CounterScreen> {
           ? true
           : (currentLuminance < (_baselineLuminance * 0.85));
 
-      // 1. STANDING TRANSITION GUARD
       if (_awaitingStandingPosition) {
         bool isFullySettledStanding = _isLowLightMode
             ? (frameMotionScore < 4.0)
@@ -592,7 +543,6 @@ class _CounterScreenState extends State<CounterScreen> {
         return;
       }
 
-      // 2. SAJDAH MOTION SEQUENCE DETECTION
       double motionTriggerThreshold = _isLowLightMode ? 8.0 : 10.0;
       double motionSettleThreshold = _isLowLightMode ? 6.0 : 8.0;
 
@@ -626,8 +576,6 @@ class _CounterScreenState extends State<CounterScreen> {
     setState(() {
       _totalSajdas++;
       _currentSajdah = (_totalSajdas % 2 == 0) ? 2 : 1;
-      
-      // Calculate current Rakat accurately based on completed Sajdahs
       _currentRakat = ((_totalSajdas - 1) ~/ 2) + 1;
       if (_currentRakat > _targetRakats) {
         _currentRakat = _targetRakats;
@@ -636,7 +584,6 @@ class _CounterScreenState extends State<CounterScreen> {
       _statusText = _getLabel('counted', param: '$_currentSajdah');
     });
 
-    // Auto-complete session when target rakats (all sajdahs) are reached
     if (_totalSajdas >= maxSajdasForSession) {
       setState(() {
         _statusText = _getLabel('complete');
@@ -650,7 +597,6 @@ class _CounterScreenState extends State<CounterScreen> {
       _standingStartTime = null;
     }
 
-    // Trigger 20-second Tashahhud delay IMMEDIATELY after 2nd Sajdah of 2nd Rakat (Sajdah 4)
     bool isEndOfRakat2 = (_totalSajdas == 4) && (_targetRakats > 2);
 
     if (isEndOfRakat2) {
@@ -665,7 +611,6 @@ class _CounterScreenState extends State<CounterScreen> {
           if (_currentSajdah == 2) {
             setState(() {
               _currentSajdah = 0;
-              // Advance displayed rakat count when rising for the next rakat
               _currentRakat = (_totalSajdas ~/ 2) + 1;
               _statusText = _getLabel('stand_up', param: '$_currentRakat');
             });
@@ -680,7 +625,7 @@ class _CounterScreenState extends State<CounterScreen> {
   }
 
   void _startTashahhudDelay() {
-    _tashahhudSecondsLeft = 20;
+    _tashahhudSecondsLeft = 10;
     _tashahhudTimer?.cancel();
 
     setState(() {
@@ -703,7 +648,6 @@ class _CounterScreenState extends State<CounterScreen> {
           _isMotionActive = false;
           _sajdahStartTime = null;
           _currentSajdah = 0;
-          // After 20s Tashahhud sits, advance displayed rakat to 3
           _currentRakat = 3;
           _statusText = _getLabel('stand_up', param: '$_currentRakat');
         }
@@ -711,16 +655,25 @@ class _CounterScreenState extends State<CounterScreen> {
     });
   }
 
-  void _stopSession() {
+  Future<void> _stopSession() async {
     _tashahhudTimer?.cancel();
-    WakelockPlus.disable();
-    _cameraController?.stopImageStream();
-    _cameraController?.dispose();
+    await WakelockPlus.disable();
+
+    if (_cameraController != null) {
+      try {
+        if (_cameraController!.value.isStreamingImages) {
+          await _cameraController!.stopImageStream();
+        }
+        await _cameraController!.dispose();
+      } catch (e) {
+        debugPrint("Camera disposal exception: $e");
+      }
+      _cameraController = null;
+    }
 
     if (mounted) {
       setState(() {
         _isSessionActive = false;
-        _cameraController = null;
       });
     }
   }
@@ -741,26 +694,53 @@ class _CounterScreenState extends State<CounterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: IconButton(
-                  icon: const Icon(Icons.language, color: Colors.white),
-                  onPressed: () {
-                    _stopSession();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LanguageSelectionScreen()),
-                    );
-                  },
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.explore, color: isDark ? Colors.white : Colors.black),
+                    onPressed: () async {
+                      await _stopSession();
+                      if (mounted) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaCompassScreen()));
+                      }
+                    },
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.settings, color: isDark ? Colors.white : Colors.black),
+                        onPressed: () async {
+                          await _stopSession();
+                          if (mounted) {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(selectedLanguage: widget.selectedLanguage)));
+                          }
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.language, color: isDark ? Colors.white : Colors.black),
+                        onPressed: () async {
+                          await _stopSession();
+                          if (mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LanguageSelectionScreen()),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
             Column(
@@ -776,8 +756,8 @@ class _CounterScreenState extends State<CounterScreen> {
                 ),
                 Text(
                   '$_currentRakat / $_targetRakats',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
                     fontSize: 72,
                     fontWeight: FontWeight.w900,
                   ),
@@ -798,8 +778,8 @@ class _CounterScreenState extends State<CounterScreen> {
                 const SizedBox(height: 5),
                 Text(
                   '$_currentSajdah',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
                   ),
@@ -829,13 +809,13 @@ class _CounterScreenState extends State<CounterScreen> {
                           label: Text(
                             _getLabel('chip_label', param: '$count'),
                             style: TextStyle(
-                              color: isSelected ? Colors.black : Colors.white,
+                              color: isSelected ? (isDark ? Colors.black : Colors.white) : (isDark ? Colors.white : Colors.black),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           selected: isSelected,
-                          selectedColor: Colors.white,
-                          backgroundColor: Colors.grey[900],
+                          selectedColor: isDark ? Colors.white : Colors.black,
+                          backgroundColor: isDark ? Colors.grey[900] : Colors.grey[300],
                           onSelected: (selected) {
                             if (selected) {
                               setState(() {
@@ -869,8 +849,8 @@ class _CounterScreenState extends State<CounterScreen> {
                   ElevatedButton(
                     onPressed: _startSession,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
+                      backgroundColor: isDark ? Colors.white : Colors.black,
+                      foregroundColor: isDark ? Colors.black : Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     ),
@@ -890,6 +870,362 @@ class _CounterScreenState extends State<CounterScreen> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class QiblaCompassScreen extends StatefulWidget {
+  const QiblaCompassScreen({super.key});
+
+  @override
+  State<QiblaCompassScreen> createState() => _QiblaCompassScreenState();
+}
+
+class _QiblaCompassScreenState extends State<QiblaCompassScreen> {
+  double? _qiblaOffset;
+  String _errorMsg = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _initQibla();
+  }
+
+  Future<void> _initQibla() async {
+    var status = await Permission.location.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      setState(() => _errorMsg = "Location permission is required to calculate Qibla.");
+      return;
+    }
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() => _errorMsg = "Please turn ON GPS / Location Services on your device.");
+      return;
+    }
+
+    try {
+      Position pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium,
+        timeLimit: const Duration(seconds: 8),
+      );
+      final coordinates = Coordinates(pos.latitude, pos.longitude);
+      final qiblaDegree = Qibla(coordinates).direction;
+      setState(() {
+        _qiblaOffset = qiblaDegree;
+        _errorMsg = "";
+      });
+    } catch (e) {
+      setState(() => _errorMsg = "Unable to fetch location. Ensure Location Services are active.");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Qibla Compass'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      body: Center(
+        child: _errorMsg.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.location_off, size: 50, color: Colors.redAccent),
+                    const SizedBox(height: 16),
+                    Text(_errorMsg, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _initQibla,
+                      child: const Text('Grant / Retry'),
+                    ),
+                  ],
+                ),
+              )
+            : _qiblaOffset == null
+                ? const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text("Fetching Location & Qibla Direction..."),
+                    ],
+                  )
+                : StreamBuilder<CompassEvent>(
+                    stream: FlutterCompass.events,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) return const Text('Compass Sensor Error');
+                      if (!snapshot.hasData) return const CircularProgressIndicator();
+
+                      double? heading = snapshot.data!.heading;
+                      if (heading == null) return const Text('Magnetometer sensor not found on device');
+
+                      double qiblaDirection = _qiblaOffset! - heading;
+
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${heading.toStringAsFixed(0)}°',
+                            style: TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 280,
+                                height: 280,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.grey.withOpacity(0.3), width: 3),
+                                ),
+                              ),
+                              Transform.rotate(
+                                angle: (qiblaDirection * (math.pi / 180)),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.navigation, size: 80, color: Colors.greenAccent),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.greenAccent.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Text(
+                                        'KAABA',
+                                        style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+      ),
+    );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  final String selectedLanguage;
+  const SettingsScreen({super.key, required this.selectedLanguage});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _notificationsEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPref();
+  }
+
+  void _loadNotificationPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _notificationsEnabled = prefs.getBool('notifications_enabled') ?? false;
+    });
+  }
+
+  Future<void> _toggleNotifications(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (value) {
+      var locStatus = await Permission.location.request();
+      var notifStatus = await Permission.notification.request();
+
+      if (locStatus.isGranted && (notifStatus.isGranted || notifStatus.isLimited)) {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (!serviceEnabled) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please enable GPS/Location Services on your device.")),
+          );
+          return;
+        }
+
+        await prefs.setBool('notifications_enabled', true);
+        setState(() => _notificationsEnabled = true);
+        await _schedulePrayerNotifications();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Location and Notification permissions are required.")),
+        );
+      }
+    } else {
+      await prefs.setBool('notifications_enabled', false);
+      setState(() => _notificationsEnabled = false);
+      await _notificationsPlugin.cancelAll();
+    }
+  }
+
+  Future<void> _schedulePrayerNotifications() async {
+    Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+    final myCoordinates = Coordinates(pos.latitude, pos.longitude);
+    final params = CalculationMethod.muslim_world_league.getParameters();
+    final prayerTimes = PrayerTimes.today(myCoordinates, params);
+
+    List<Map<String, dynamic>> prayers = [
+      {'id': 1, 'name': 'Fajr', 'time': prayerTimes.fajr},
+      {'id': 2, 'name': 'Dhuhr', 'time': prayerTimes.dhuhr},
+      {'id': 3, 'name': 'Asr', 'time': prayerTimes.asr},
+      {'id': 4, 'name': 'Maghrib', 'time': prayerTimes.maghrib},
+      {'id': 5, 'name': 'Isha', 'time': prayerTimes.isha},
+    ];
+
+    for (var prayer in prayers) {
+      DateTime time = prayer['time'];
+      if (time.isAfter(DateTime.now())) {
+        await _notificationsPlugin.show(
+          prayer['id'],
+          'Prayer Time Alert',
+          'It is time for ${prayer['name']} Namaz',
+          const NotificationDetails(
+            android: AndroidNotificationDetails('prayer_channel', 'Prayer Alerts', importance: Importance.max),
+            iOS: DarwinNotificationDetails(),
+          ),
+        );
+      }
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Prayer notifications enabled successfully!")),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = SajdahCounterApp.of(context);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
+      body: ListView(
+        children: [
+          SwitchListTile(
+            title: const Text('Prayer Notifications'),
+            subtitle: const Text('Notify for Fajr, Dhuhr, Asr, Maghrib, and Isha based on location'),
+            value: _notificationsEnabled,
+            onChanged: _toggleNotifications,
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text('App Theme', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+          ),
+          RadioListTile<String>(
+            title: const Text('Dark Mode'),
+            value: 'dark',
+            groupValue: appState._themeMode,
+            onChanged: (val) => appState.setTheme(val!),
+          ),
+          RadioListTile<String>(
+            title: const Text('Light Mode'),
+            value: 'light',
+            groupValue: appState._themeMode,
+            onChanged: (val) => appState.setTheme(val!),
+          ),
+          RadioListTile<String>(
+            title: const Text('System Default'),
+            value: 'system',
+            groupValue: appState._themeMode,
+            onChanged: (val) => appState.setTheme(val!),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LanguageSelectionScreen extends StatefulWidget {
+  const LanguageSelectionScreen({super.key});
+
+  @override
+  State<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
+}
+
+class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
+  String _selectedLanguage = 'English';
+
+  Future<void> _saveLanguageAndContinue() async {
+    SajdahCounterApp.of(context).setLanguage(_selectedLanguage);
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CounterScreen(selectedLanguage: _selectedLanguage),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'Rakat Counter / زبان منتخب کریں',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _translations.keys.length,
+                  itemBuilder: (context, index) {
+                    final lang = _translations.keys.elementAt(index);
+                    final isSelected = lang == _selectedLanguage;
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: isSelected ? Colors.blue : Colors.grey, width: 1.5),
+                      ),
+                      child: ListTile(
+                        title: Text(lang),
+                        trailing: isSelected ? const Icon(Icons.check_circle, color: Colors.blue) : null,
+                        onTap: () => setState(() => _selectedLanguage = lang),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _saveLanguageAndContinue,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                ),
+                child: const Text('CONTINUE', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
         ),
       ),
     );
