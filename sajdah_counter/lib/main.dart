@@ -34,6 +34,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'SELECT TOTAL RAKATS',
     'tashahhud': 'TASHAHHUD - RAKAT 3 IN {num}s',
     'chip_label': '{num} RAKAT',
+    'prayer_times': 'Today Prayer Times',
   },
   'Urdu (اردو)': {
     'app_name': 'رکعت کاؤنٹر',
@@ -54,6 +55,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'کل رکعتیں منتخب کریں',
     'tashahhud': 'تشہد - رکعت 3 ({num} سیکنڈ)',
     'chip_label': '{num} رکعت',
+    'prayer_times': 'آج کے نماز کے اوقات',
   },
   'Arabic (العربية)': {
     'app_name': 'عداد الركعات',
@@ -74,6 +76,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'اختر عدد الركعات',
     'tashahhud': 'التشهّد - الركعة الثالثة بعد {num} ثانية',
     'chip_label': '{num} ركعات',
+    'prayer_times': 'مواقيت الصلاة اليوم',
   },
   'Hindi (हिंदी)': {
     'app_name': 'रक़ात काउंटर',
@@ -94,6 +97,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'कुल रक़ात चुनें',
     'tashahhud': 'तशह्हुद - रक़ात 3 ({num} से.)',
     'chip_label': '{num} रक़ात',
+    'prayer_times': 'आज की नमाज़ का समय',
   },
   'Bengali (বাংলা)': {
     'app_name': 'রাকাত কাউন্টার',
@@ -114,6 +118,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'মোট রাকাত নির্বাচন করুন',
     'tashahhud': 'তাশাহহুদ - ৩য় রাকাত {num} সেকেন্ডে',
     'chip_label': '{num} রাকাত',
+    'prayer_times': 'আজকের নামাজের সময়',
   },
   'Turkish (Türkçe)': {
     'app_name': 'Rekat Sayacı',
@@ -134,6 +139,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'TOPLAM REKAT SEÇİN',
     'tashahhud': 'TEŞEHHÜD - 3. REKAT {num} sn',
     'chip_label': '{num} REKAT',
+    'prayer_times': 'Bugünkü Namaz Vakitleri',
   },
   'Indonesian (Bahasa)': {
     'app_name': 'Penghitung Rakaat',
@@ -154,6 +160,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'PILIH TOTAL RAKAAT',
     'tashahhud': 'TASHAHHUD - RAKAAT 3 DALAM {num}s',
     'chip_label': '{num} RAKAAT',
+    'prayer_times': 'Jadwal Shalat Hari Ini',
   },
   'Persian (فارسی)': {
     'app_name': 'رکعت شمار',
@@ -174,6 +181,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'انتخاب تعداد کل رکعت‌ها',
     'tashahhud': 'تشهد - رکعت ۳ در {num} ثانیه',
     'chip_label': '{num} رکعت',
+    'prayer_times': 'اوقات شرعی امروز',
   },
   'French (Français)': {
     'app_name': 'Compteur de Rakat',
@@ -194,6 +202,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'SÉLECTIONNER NOMBRE DE RAKATS',
     'tashahhud': 'TASHAHHUD - RAKAT 3 DANS {num}s',
     'chip_label': '{num} RAKAT',
+    'prayer_times': 'Heures de prière aujourd\'hui',
   },
   'Spanish (Español)': {
     'app_name': 'Contador de Rakat',
@@ -214,6 +223,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'SELECCIONAR TOTAL DE RAKATS',
     'tashahhud': 'TASHAHHUD - RAKAT 3 EN {num}s',
     'chip_label': '{num} RAKAT',
+    'prayer_times': 'Horarios de oración de hoy',
   },
   'German (Deutsch)': {
     'app_name': 'Rakat Zähler',
@@ -234,6 +244,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'GESAMTE RAKATS WÄHLEN',
     'tashahhud': 'TASHAHHUD - RAKAT 3 IN {num}s',
     'chip_label': '{num} RAKAT',
+    'prayer_times': 'Heutige Gebetszeiten',
   },
   'Russian (Русский)': {
     'app_name': 'Счетчик Ракатов',
@@ -254,6 +265,7 @@ final Map<String, Map<String, String>> _translations = {
     'select_rakat': 'ВЫБЕРИТЕ КОЛИЧЕСТВО РАКАТОВ',
     'tashahhud': 'ТАШАХХУД - РАКАТ 3 ЧЕРЕЗ {num}с',
     'chip_label': '{num} РАКАТ',
+    'prayer_times': 'Время молитв на сегодня',
   },
 };
 
@@ -340,6 +352,8 @@ class _SajdahCounterAppState extends State<SajdahCounterApp> {
   }
 }
 
+enum SajdahState { readyForDescent, holdingSajdah, awaitingRiseUp }
+
 class CounterScreen extends StatefulWidget {
   final String selectedLanguage;
   const CounterScreen({super.key, required this.selectedLanguage});
@@ -362,7 +376,11 @@ class _CounterScreenState extends State<CounterScreen> {
 
   List<int>? _previousFrameBytes;
   DateTime? _sajdahStartTime;
+  DateTime? _riseStartTime;
   DateTime? _standingStartTime;
+
+  SajdahState _postureState = SajdahState.readyForDescent;
+
   bool _inCooldown = false;
   bool _isMotionActive = false;
   bool _awaitingStandingPosition = false;
@@ -374,8 +392,7 @@ class _CounterScreenState extends State<CounterScreen> {
   double _baselineLuminance = -1.0;
   final List<double> _luminanceBuffer = [];
 
-  static const Duration _requiredSajdahHold = Duration(milliseconds: 400);
-  static const Duration _cooldownDuration = Duration(seconds: 2, milliseconds: 500);
+  static const Duration _requiredSajdahHold = Duration(milliseconds: 450);
 
   @override
   void initState() {
@@ -453,8 +470,10 @@ class _CounterScreenState extends State<CounterScreen> {
       _previousFrameBytes = null;
       _baselineLuminance = -1.0;
       _luminanceBuffer.clear();
+      _postureState = SajdahState.readyForDescent;
       _awaitingStandingPosition = false;
       _standingStartTime = null;
+      _riseStartTime = null;
       _inCooldown = false;
       _isMotionActive = false;
       _isProcessingFrame = false;
@@ -519,16 +538,18 @@ class _CounterScreenState extends State<CounterScreen> {
           ? true
           : (currentLuminance < (_baselineLuminance * 0.85));
 
-      if (_awaitingStandingPosition) {
-        bool isFullySettledStanding = _isLowLightMode
-            ? (frameMotionScore < 4.0)
-            : (currentLuminance > (_baselineLuminance * 0.70) && frameMotionScore < 8.0);
+      bool isUprightPosition = _isLowLightMode
+          ? (frameMotionScore < 4.0)
+          : (currentLuminance > (_baselineLuminance * 0.72));
 
-        if (isFullySettledStanding) {
+      // 1. STANDING FOR NEXT RAKAT VERIFICATION
+      if (_awaitingStandingPosition) {
+        if (isUprightPosition && frameMotionScore < 8.0) {
           _standingStartTime ??= DateTime.now();
           if (DateTime.now().difference(_standingStartTime!) >= const Duration(milliseconds: 500)) {
             _awaitingStandingPosition = false;
             _standingStartTime = null;
+            _postureState = SajdahState.readyForDescent;
             _isMotionActive = false;
             _sajdahStartTime = null;
             if (mounted) {
@@ -543,6 +564,29 @@ class _CounterScreenState extends State<CounterScreen> {
         return;
       }
 
+      // 2. STATE MACHINE: PREVENT MULTIPLE COUNTS WHILE HOLDING A LONG SAJDAH
+      if (_postureState == SajdahState.awaitingRiseUp) {
+        // Must physically rise / sit up before the app allows detection of another sajdah
+        if (isUprightPosition) {
+          _riseStartTime ??= DateTime.now();
+          if (DateTime.now().difference(_riseStartTime!) >= const Duration(milliseconds: 400)) {
+            _postureState = SajdahState.readyForDescent;
+            _riseStartTime = null;
+            _sajdahStartTime = null;
+            _isMotionActive = false;
+            if (mounted && _currentSajdah == 1) {
+              setState(() {
+                _statusText = _getLabel('detecting_2');
+              });
+            }
+          }
+        } else {
+          _riseStartTime = null;
+        }
+        return;
+      }
+
+      // 3. MOTION & SAJDAH DETECTION
       double motionTriggerThreshold = _isLowLightMode ? 8.0 : 10.0;
       double motionSettleThreshold = _isLowLightMode ? 6.0 : 8.0;
 
@@ -569,7 +613,7 @@ class _CounterScreenState extends State<CounterScreen> {
   void _onSajdahDetected() {
     _sajdahStartTime = null;
     _isMotionActive = false;
-    _inCooldown = true;
+    _postureState = SajdahState.awaitingRiseUp; // Lock until user rises
 
     int maxSajdasForSession = _targetRakats * 2;
 
@@ -597,30 +641,19 @@ class _CounterScreenState extends State<CounterScreen> {
       _standingStartTime = null;
     }
 
+    // 10 SECONDS DELAY AT THE END OF RAKAT 2 SAJDAH 2
     bool isEndOfRakat2 = (_totalSajdas == 4) && (_targetRakats > 2);
 
     if (isEndOfRakat2) {
       _startTashahhudDelay();
     } else {
-      Timer(_cooldownDuration, () {
-        _inCooldown = false;
-        if (mounted) {
-          _isMotionActive = false;
-          _sajdahStartTime = null;
-
-          if (_currentSajdah == 2) {
-            setState(() {
-              _currentSajdah = 0;
-              _currentRakat = (_totalSajdas ~/ 2) + 1;
-              _statusText = _getLabel('stand_up', param: '$_currentRakat');
-            });
-          } else {
-            setState(() {
-              _statusText = _getLabel('detecting_2');
-            });
-          }
-        }
-      });
+      if (_currentSajdah == 2) {
+        setState(() {
+          _currentSajdah = 0;
+          _currentRakat = (_totalSajdas ~/ 2) + 1;
+          _statusText = _getLabel('stand_up', param: '$_currentRakat');
+        });
+      }
     }
   }
 
@@ -686,6 +719,14 @@ class _CounterScreenState extends State<CounterScreen> {
     }
   }
 
+  Future<void> _showPrayerTimesDialog() async {
+    await _stopSession();
+    showDialog(
+      context: context,
+      builder: (ctx) => PrayerTimesDialog(selectedLanguage: widget.selectedLanguage),
+    );
+  }
+
   @override
   void dispose() {
     _stopSession();
@@ -706,18 +747,31 @@ class _CounterScreenState extends State<CounterScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.explore, color: isDark ? Colors.white : Colors.black),
-                    onPressed: () async {
-                      await _stopSession();
-                      if (mounted) {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaCompassScreen()));
-                      }
-                    },
-                  ),
+                  // LEFT SIDE BUTTONS: Prayer Times Table & Qibla Compass
                   Row(
                     children: [
                       IconButton(
+                        tooltip: 'Today Prayer Times',
+                        icon: Icon(Icons.access_time_filled, color: isDark ? Colors.white : Colors.black),
+                        onPressed: _showPrayerTimesDialog,
+                      ),
+                      IconButton(
+                        tooltip: 'Qibla Compass',
+                        icon: Icon(Icons.explore, color: isDark ? Colors.white : Colors.black),
+                        onPressed: () async {
+                          await _stopSession();
+                          if (mounted) {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaCompassScreen()));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  // RIGHT SIDE BUTTONS: Settings & Language
+                  Row(
+                    children: [
+                      IconButton(
+                        tooltip: 'Settings',
                         icon: Icon(Icons.settings, color: isDark ? Colors.white : Colors.black),
                         onPressed: () async {
                           await _stopSession();
@@ -727,6 +781,7 @@ class _CounterScreenState extends State<CounterScreen> {
                         },
                       ),
                       IconButton(
+                        tooltip: 'Language',
                         icon: Icon(Icons.language, color: isDark ? Colors.white : Colors.black),
                         onPressed: () async {
                           await _stopSession();
@@ -871,6 +926,143 @@ class _CounterScreenState extends State<CounterScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PrayerTimesDialog extends StatefulWidget {
+  final String selectedLanguage;
+  const PrayerTimesDialog({super.key, required this.selectedLanguage});
+
+  @override
+  State<PrayerTimesDialog> createState() => _PrayerTimesDialogState();
+}
+
+class _PrayerTimesDialogState extends State<PrayerTimesDialog> {
+  PrayerTimes? _prayerTimes;
+  bool _loading = true;
+  String _error = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPrayerTimes();
+  }
+
+  Future<void> _fetchPrayerTimes() async {
+    var status = await Permission.location.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      if (mounted) {
+        setState(() {
+          _error = "Location permission is required for accurate prayer times.";
+          _loading = false;
+        });
+      }
+      return;
+    }
+
+    try {
+      Position pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium,
+        timeLimit: const Duration(seconds: 8),
+      );
+      final coords = Coordinates(pos.latitude, pos.longitude);
+      final params = CalculationMethod.muslim_world_league.getParameters();
+      final pt = PrayerTimes.today(coords, params);
+      if (mounted) {
+        setState(() {
+          _prayerTimes = pt;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = "Could not detect GPS coordinates. Turn on location services.";
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  String _formatTime(DateTime dt) {
+    int hour = dt.hour;
+    int minute = dt.minute;
+    String period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    if (hour == 0) hour = 12;
+    String minStr = minute.toString().padLeft(2, '0');
+    return '$hour:$minStr $period';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      backgroundColor: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+      title: Row(
+        children: [
+          const Icon(Icons.access_time_filled, color: Colors.blueAccent),
+          const SizedBox(width: 10),
+          Text(
+            _translations[widget.selectedLanguage]?['prayer_times'] ?? 'Today Prayer Times',
+            style: TextStyle(fontSize: 18, color: isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      content: _loading
+          ? const SizedBox(
+              height: 120,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : _error.isNotEmpty
+              ? Text(_error, style: const TextStyle(color: Colors.redAccent))
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildTimeRow('Fajr', _prayerTimes!.fajr, isDark),
+                    _buildTimeRow('Sunrise', _prayerTimes!.sunrise, isDark),
+                    _buildTimeRow('Dhuhr', _prayerTimes!.dhuhr, isDark),
+                    _buildTimeRow('Asr', _prayerTimes!.asr, isDark),
+                    _buildTimeRow('Maghrib', _prayerTimes!.maghrib, isDark),
+                    _buildTimeRow('Isha', _prayerTimes!.isha, isDark),
+                  ],
+                ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeRow(String name, DateTime time, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: isDark ? Colors.white70 : Colors.black87,
+            ),
+          ),
+          Text(
+            _formatTime(time),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
