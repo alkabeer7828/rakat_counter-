@@ -9,12 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:adhan/adhan.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 late List<CameraDescription> _cameras;
-final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final Map<String, Map<String, String>> _translations = {
   'English': {
@@ -37,8 +33,9 @@ final Map<String, Map<String, String>> _translations = {
     'tashahhud': 'TASHAHHUD - RAKAT 3 IN {num}s',
     'chip_label': '{num} RAKAT',
     'prayer_times': 'Today Prayer Times',
-    'fiqh_hanafi': 'Hanafi (Asr later)',
-    'fiqh_shafi': 'Shafi / Hanbali / Maliki',
+    'fiqh_hanafi': 'Hanafi',
+    'fiqh_shafi': 'Shafi',
+    'fiqh_jafari': 'Jafari (Shia)',
   },
   'Urdu (اردو)': {
     'app_name': 'رکعت کاؤنٹر',
@@ -60,8 +57,9 @@ final Map<String, Map<String, String>> _translations = {
     'tashahhud': 'تشہد - رکعت 3 ({num} سیکنڈ)',
     'chip_label': '{num} رکعت',
     'prayer_times': 'آج کے نماز کے اوقات',
-    'fiqh_hanafi': 'حنفی (عصر دیر سے)',
-    'fiqh_shafi': 'شافعی / حنبلی / مالکی',
+    'fiqh_hanafi': 'حنفی',
+    'fiqh_shafi': 'شافعی',
+    'fiqh_jafari': 'جعفریہ (اہل تشیع)',
   },
   'Arabic (العربية)': {
     'app_name': 'عداد الركعات',
@@ -84,7 +82,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} ركعات',
     'prayer_times': 'مواقيت الصلاة اليوم',
     'fiqh_hanafi': 'حنفي',
-    'fiqh_shafi': 'شافعي / حنبلي / مالكي',
+    'fiqh_shafi': 'شافعي',
+    'fiqh_jafari': 'جعفري',
   },
   'Hindi (हिंदी)': {
     'app_name': 'रक़ात काउंटर',
@@ -107,7 +106,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} रक़ात',
     'prayer_times': 'आज की नमाज़ का समय',
     'fiqh_hanafi': 'हनफ़ी',
-    'fiqh_shafi': 'शाफ़ई / हम्बली / मालिकी',
+    'fiqh_shafi': 'शाफ़ई',
+    'fiqh_jafari': 'जाफ़री',
   },
   'Bengali (বাংলা)': {
     'app_name': 'রাকাত কাউন্টার',
@@ -130,7 +130,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} রাকাত',
     'prayer_times': 'আজকের নামাজের সময়',
     'fiqh_hanafi': 'হানাফী',
-    'fiqh_shafi': 'শাফিয়ী / হাম্বলী / মালিকী',
+    'fiqh_shafi': 'শাফিয়ী',
+    'fiqh_jafari': 'জাফরি',
   },
   'Turkish (Türkçe)': {
     'app_name': 'Rekat Sayacı',
@@ -153,7 +154,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} REKAT',
     'prayer_times': 'Bugünkü Namaz Vakitleri',
     'fiqh_hanafi': 'Hanefi',
-    'fiqh_shafi': 'Şafi / Hanbeli / Maliki',
+    'fiqh_shafi': 'Şafi',
+    'fiqh_jafari': 'Caferi',
   },
   'Indonesian (Bahasa)': {
     'app_name': 'Penghitung Rakaat',
@@ -176,7 +178,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} RAKAAT',
     'prayer_times': 'Jadwal Shalat Hari Ini',
     'fiqh_hanafi': 'Hanafi',
-    'fiqh_shafi': 'Syafi\'i / Hanbali / Maliki',
+    'fiqh_shafi': 'Syafi\'i',
+    'fiqh_jafari': 'Ja\'fari',
   },
   'Persian (فارسی)': {
     'app_name': 'رکعت شمار',
@@ -199,7 +202,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} رکعت',
     'prayer_times': 'اوقات شرعی امروز',
     'fiqh_hanafi': 'حنفی',
-    'fiqh_shafi': 'شافعی / حنبلی / مالکی',
+    'fiqh_shafi': 'شافعی',
+    'fiqh_jafari': 'جعفری',
   },
   'French (Français)': {
     'app_name': 'Compteur de Rakat',
@@ -222,7 +226,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} RAKAT',
     'prayer_times': 'Heures de prière aujourd\'hui',
     'fiqh_hanafi': 'Hanafi',
-    'fiqh_shafi': 'Shafi\'i / Hanbali / Maliki',
+    'fiqh_shafi': 'Chaféite',
+    'fiqh_jafari': 'Ja\'fari',
   },
   'Spanish (Español)': {
     'app_name': 'Contador de Rakat',
@@ -244,8 +249,9 @@ final Map<String, Map<String, String>> _translations = {
     'tashahhud': 'TASHAHHUD - RAKAT 3 EN {num}s',
     'chip_label': '{num} RAKAT',
     'prayer_times': 'Horarios de oración de hoy',
-    'fiqh_hanafi': 'Hanafi',
-    'fiqh_shafi': 'Shafi / Hanbali / Maliki',
+    'fiqh_hanafi': 'Hanafí',
+    'fiqh_shafi': 'Shafi\'í',
+    'fiqh_jafari': 'Ya\'fari',
   },
   'German (Deutsch)': {
     'app_name': 'Rakat Zähler',
@@ -268,7 +274,8 @@ final Map<String, Map<String, String>> _translations = {
     'chip_label': '{num} RAKAT',
     'prayer_times': 'Heutige Gebetszeiten',
     'fiqh_hanafi': 'Hanafi',
-    'fiqh_shafi': 'Schafi\'i / Hanbali / Maliki',
+    'fiqh_shafi': 'Schafi\'i',
+    'fiqh_jafari': 'Dschafari',
   },
   'Russian (Русский)': {
     'app_name': 'Счетчик Ракатов',
@@ -287,41 +294,24 @@ final Map<String, Map<String, String>> _translations = {
     'detecting_2': 'ОПРЕДЕЛЕНИЕ 2-Й САДЖДА...',
     'ready_rakat': 'РАКАТ {num} - ГОТОВО',
     'select_rakat': 'ВЫБЕРИТЕ КОЛИЧЕСТВО РАКАТОВ',
-    'tashahhud': 'ТАШАХХУД - РАКАТ 3 ЧЕРЕЗ {num}с',
+    'tashahhud': 'ТАШАХХУД - РАКAT 3 ЧЕРЕЗ {num}с',
     'chip_label': '{num} РАКАТ',
     'prayer_times': 'Время молитв на сегодня',
     'fiqh_hanafi': 'Ханафи',
-    'fiqh_shafi': 'Шафии / Ханбали / Малики',
+    'fiqh_shafi': 'Шафии',
+    'fiqh_jafari': 'Джафари',
   },
 };
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   try {
     _cameras = await availableCameras();
   } catch (e) {
     _cameras = [];
   }
-
-  // Initialize Timezone for background notifications
-  tz.initializeTimeZones();
-
-  const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-  const iosInit = DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-  await _notificationsPlugin.initialize(const InitializationSettings(android: androidInit, iOS: iosInit));
-
-  // Request native permissions on startup
-  await _notificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestNotificationsPermission();
-  await _notificationsPlugin
-      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
 
   final prefs = await SharedPreferences.getInstance();
   final savedLanguage = prefs.getString('app_language') ?? 'English';
@@ -331,6 +321,22 @@ Future<void> main() async {
     initialLanguage: savedLanguage,
     initialTheme: savedTheme,
   ));
+}
+
+CalculationParameters _getFiqhParameters(String madhab) {
+  if (madhab == 'jafari') {
+    final params = CalculationMethod.tehran.getParameters();
+    params.madhab = Madhab.shafi;
+    return params;
+  } else if (madhab == 'shafi') {
+    final params = CalculationMethod.karachi.getParameters();
+    params.madhab = Madhab.shafi;
+    return params;
+  } else {
+    final params = CalculationMethod.karachi.getParameters();
+    params.madhab = Madhab.hanafi;
+    return params;
+  }
 }
 
 class SajdahCounterApp extends StatefulWidget {
@@ -1010,9 +1016,7 @@ class _PrayerTimesDialogState extends State<PrayerTimesDialog> {
         timeLimit: const Duration(seconds: 8),
       );
       final coords = Coordinates(pos.latitude, pos.longitude);
-
-      final params = CalculationMethod.karachi.getParameters();
-      params.madhab = _currentMadhab == 'hanafi' ? Madhab.hanafi : Madhab.shafi;
+      final params = _getFiqhParameters(_currentMadhab);
 
       final pt = PrayerTimes.today(coords, params);
       if (mounted) {
@@ -1083,7 +1087,6 @@ class _PrayerTimesDialogState extends State<PrayerTimesDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // FIQH TOGGLE SWITCH
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -1092,48 +1095,9 @@ class _PrayerTimesDialogState extends State<PrayerTimesDialog> {
                         ),
                         child: Row(
                           children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => _toggleMadhab('hanafi'),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: _currentMadhab == 'hanafi' ? Colors.blueAccent : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    _translations[widget.selectedLanguage]?['fiqh_hanafi'] ?? 'Hanafi',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: _currentMadhab == 'hanafi' ? Colors.white : (isDark ? Colors.grey : Colors.black87),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => _toggleMadhab('shafi'),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: _currentMadhab == 'shafi' ? Colors.blueAccent : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    _translations[widget.selectedLanguage]?['fiqh_shafi'] ?? 'Shafi',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: _currentMadhab == 'shafi' ? Colors.white : (isDark ? Colors.grey : Colors.black87),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            _buildFiqhTab('hanafi', _translations[widget.selectedLanguage]?['fiqh_hanafi'] ?? 'Hanafi', isDark),
+                            _buildFiqhTab('shafi', _translations[widget.selectedLanguage]?['fiqh_shafi'] ?? 'Shafi', isDark),
+                            _buildFiqhTab('jafari', _translations[widget.selectedLanguage]?['fiqh_jafari'] ?? 'Jafari', isDark),
                           ],
                         ),
                       ),
@@ -1153,6 +1117,31 @@ class _PrayerTimesDialogState extends State<PrayerTimesDialog> {
           child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ],
+    );
+  }
+
+  Widget _buildFiqhTab(String key, String title, bool isDark) {
+    bool isSelected = _currentMadhab == key;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _toggleMadhab(key),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.blueAccent : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isSelected ? Colors.white : (isDark ? Colors.grey : Colors.black87),
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -1342,7 +1331,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notificationsEnabled = false;
   String _currentMadhab = 'hanafi';
 
   @override
@@ -1354,109 +1342,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _loadSettingsPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _notificationsEnabled = prefs.getBool('notifications_enabled') ?? false;
       _currentMadhab = prefs.getString('app_madhab') ?? 'hanafi';
     });
-  }
-
-  Future<void> _toggleNotifications(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (value) {
-      var locStatus = await Permission.location.request();
-      var notifStatus = await Permission.notification.request();
-
-      if (locStatus.isGranted && (notifStatus.isGranted || notifStatus.isLimited)) {
-        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-        if (!serviceEnabled) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please enable GPS/Location Services on your device.")),
-          );
-          return;
-        }
-
-        await prefs.setBool('notifications_enabled', true);
-        setState(() => _notificationsEnabled = true);
-        await _schedulePrayerNotifications();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Location and Notification permissions are required.")),
-        );
-      }
-    } else {
-      await prefs.setBool('notifications_enabled', false);
-      setState(() => _notificationsEnabled = false);
-      await _notificationsPlugin.cancelAll();
-    }
-  }
-
-  Future<void> _schedulePrayerNotifications() async {
-    await _notificationsPlugin.cancelAll();
-
-    Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
-    final myCoordinates = Coordinates(pos.latitude, pos.longitude);
-
-    final params = CalculationMethod.karachi.getParameters();
-    params.madhab = _currentMadhab == 'hanafi' ? Madhab.hanafi : Madhab.shafi;
-
-    final prayerTimes = PrayerTimes.today(myCoordinates, params);
-
-    List<Map<String, dynamic>> prayers = [
-      {'id': 1, 'name': 'Fajr', 'time': prayerTimes.fajr},
-      {'id': 2, 'name': 'Dhuhr', 'time': prayerTimes.dhuhr},
-      {'id': 3, 'name': 'Asr', 'time': prayerTimes.asr},
-      {'id': 4, 'name': 'Maghrib', 'time': prayerTimes.maghrib},
-      {'id': 5, 'name': 'Isha', 'time': prayerTimes.isha},
-    ];
-
-    for (var prayer in prayers) {
-      DateTime time = prayer['time'];
-      if (time.isAfter(DateTime.now())) {
-        final tzDateTime = tz.TZDateTime.from(time, tz.local);
-        
-        await _notificationsPlugin.zonedSchedule(
-          prayer['id'],
-          'Prayer Time Alert',
-          'It is time for ${prayer['name']} Namaz',
-          tzDateTime,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'prayer_channel',
-              'Prayer Alerts',
-              channelDescription: 'Alerts for daily 5 prayer times',
-              importance: Importance.max,
-              priority: Priority.high,
-            ),
-            iOS: DarwinNotificationDetails(
-              presentAlert: true,
-              presentBadge: true,
-              presentSound: true,
-            ),
-          ),
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        );
-      }
-    }
-
-    // Send an immediate confirmation notification so the user verifies it is active
-    await _notificationsPlugin.show(
-      999,
-      'Rakat Counter Alerts Active',
-      'Daily prayer notifications are enabled successfully.',
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'prayer_channel',
-          'Prayer Alerts',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Prayer notifications scheduled for today!")),
-    );
   }
 
   @override
@@ -1467,16 +1354,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
-          SwitchListTile(
-            title: const Text('Prayer Notifications'),
-            subtitle: const Text('Schedule alerts for Fajr, Dhuhr, Asr, Maghrib, and Isha'),
-            value: _notificationsEnabled,
-            onChanged: _toggleNotifications,
-          ),
-          const Divider(),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text('Calculation Fiqh (Asr timing)', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+            child: Text('Calculation Fiqh (Asr & Isha timing)', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
           ),
           RadioListTile<String>(
             title: const Text('Hanafi (Standard South Asia)'),
@@ -1486,9 +1366,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setString('app_madhab', val!);
               setState(() => _currentMadhab = val);
-              if (_notificationsEnabled) {
-                await _schedulePrayerNotifications();
-              }
             },
           ),
           RadioListTile<String>(
@@ -1499,9 +1376,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setString('app_madhab', val!);
               setState(() => _currentMadhab = val);
-              if (_notificationsEnabled) {
-                await _schedulePrayerNotifications();
-              }
+            },
+          ),
+          RadioListTile<String>(
+            title: const Text('Jafari (Shia / Tehran Standard)'),
+            value: 'jafari',
+            groupValue: _currentMadhab,
+            onChanged: (val) async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('app_madhab', val!);
+              setState(() => _currentMadhab = val);
             },
           ),
           const Divider(),
